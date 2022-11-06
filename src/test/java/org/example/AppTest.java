@@ -39,6 +39,16 @@ public class AppTest {
 
     @Test
     @Ignore
+    public void should_connect_to_ssl_client_cert_secured_url_using_root_and_intermediate_certs_only_and_return_400() throws Exception {
+        new TrustStoreHandler(trustStorePath, trustStorePassword, STORE_TYPE).createStoreWith("badssl/selfSigned.crt", "badssl/R3.crt", "badssl/ISRGRootX1.crt");
+        System.setProperty("javax.net.ssl.trustStore", trustStorePath);
+        System.setProperty("javax.net.ssl.trustStorePassword", String.valueOf(trustStorePassword));
+        System.setProperty("javax.net.ssl.trustStoreType", "JKS");
+        assertEquals(HttpURLConnection.HTTP_BAD_REQUEST, new App().makeHttpCallTo("https://client.badssl.com/"));
+    }
+
+    @Test
+    @Ignore
     public void should_connect_to_ssl_client_cert_secured_url_usingP12_and_return_200() throws Exception {
         new TrustStoreHandler(trustStorePath, trustStorePassword, STORE_TYPE).createStoreWith("badssl/selfSigned.crt", "badssl/R3.crt", "badssl/ISRGRootX1.crt");
         new KeyStoreHandler(keyStorePath, keyStorePassword, STORE_TYPE).addP12StoreToKeystore("badssl/badssl.com-client.p12", "badssl.com".toCharArray());
