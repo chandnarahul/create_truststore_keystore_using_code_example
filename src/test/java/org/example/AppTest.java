@@ -35,22 +35,12 @@ public class AppTest {
     @Test
     @Ignore
     public void should_connect_to_self_signed_cert_url_and_return_200() throws Exception {
-        new TrustStoreHandler(trustStorePath, trustStorePassword, "JKS").createStoreWith("badssl/selfSigned.crt");
+        new TrustStoreHandler(trustStorePath, trustStorePassword, STORE_TYPE).createStoreWith("badssl/selfSigned.crt");
         System.setProperty("javax.net.ssl.trustStore", trustStorePath);
         System.setProperty("javax.net.ssl.trustStorePassword", String.valueOf(trustStorePassword));
-        System.setProperty("javax.net.ssl.trustStoreType", "JKS");
+        System.setProperty("javax.net.ssl.trustStoreType", STORE_TYPE);
 
         assertEquals(HttpURLConnection.HTTP_OK, new App().makeHttpCallTo("https://self-signed.badssl.com/"));
-    }
-
-    @Test
-    @Ignore
-    public void should_connect_to_ssl_client_cert_secured_url_using_root_and_intermediate_certs_only_and_return_400() throws Exception {
-        new TrustStoreHandler(trustStorePath, trustStorePassword, STORE_TYPE).createStoreWith("badssl/selfSigned.crt", "badssl/R3.crt", "badssl/ISRGRootX1.crt");
-        System.setProperty("javax.net.ssl.trustStore", trustStorePath);
-        System.setProperty("javax.net.ssl.trustStorePassword", String.valueOf(trustStorePassword));
-        System.setProperty("javax.net.ssl.trustStoreType", "JKS");
-        assertEquals(HttpURLConnection.HTTP_BAD_REQUEST, new App().makeHttpCallTo("https://client.badssl.com/"));
     }
 
     @Test
