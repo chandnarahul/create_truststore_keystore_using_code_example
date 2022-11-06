@@ -26,6 +26,12 @@ public class AppTest {
         System.setProperty("javax.net.ssl.keyStoreType", STORE_TYPE);
     }
 
+    @After
+    public void cleanUp() {
+        new File(trustStorePath).delete();
+        new File(keyStorePath).delete();
+    }
+
     @Test
     @Ignore
     public void should_connect_to_self_signed_cert_url_and_return_200() throws Exception {
@@ -107,9 +113,4 @@ public class AppTest {
         assertEquals(HttpURLConnection.HTTP_OK, new App().makeHttpCallTo("https://client.badssl.com/"));
     }
 
-    @After
-    public void cleanUp() {
-        new File(trustStorePath).delete();
-        new File(keyStorePath).delete();
-    }
 }
