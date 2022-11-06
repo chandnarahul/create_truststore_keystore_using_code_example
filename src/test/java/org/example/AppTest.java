@@ -2,6 +2,7 @@ package org.example;
 
 
 import org.junit.After;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
@@ -26,6 +27,7 @@ public class AppTest {
     }
 
     @Test
+    @Ignore
     public void should_connect_to_self_signed_cert_url_and_return_200() throws Exception {
         new TrustStoreHandler(trustStorePath, trustStorePassword, "JKS").createStoreWith("badssl/selfSigned.crt");
         System.setProperty("javax.net.ssl.trustStore", trustStorePath);
@@ -36,6 +38,7 @@ public class AppTest {
     }
 
     @Test
+    @Ignore
     public void should_connect_to_ssl_client_cert_secured_url_usingP12_and_return_200() throws Exception {
         new TrustStoreHandler(trustStorePath, trustStorePassword, STORE_TYPE).createStoreWith("badssl/selfSigned.crt", "badssl/R3.crt", "badssl/ISRGRootX1.crt");
         new KeyStoreHandler(keyStorePath, keyStorePassword, STORE_TYPE).addP12StoreToKeystore("badssl/badssl.com-client.p12", "badssl.com".toCharArray());
@@ -45,6 +48,7 @@ public class AppTest {
     }
 
     @Test
+    @Ignore
     public void should_connect_to_ssl_client_cert_secured_url_using_unencrypted_DER_Key_and_return_200() throws Exception {
         new TrustStoreHandler(trustStorePath, trustStorePassword, STORE_TYPE).createStoreWith("badssl/selfSigned.crt", "badssl/R3.crt", "badssl/ISRGRootX1.crt");
         new KeyStoreHandler(keyStorePath, keyStorePassword, STORE_TYPE).addCertAndUnEncryptedDERKey("badssl/cert.pem", "badssl/pkcs8_der.key");
@@ -54,6 +58,7 @@ public class AppTest {
     }
 
     @Test
+    @Ignore
     public void should_connect_to_ssl_client_cert_secured_url_using_unencrypted_PEM_Key_and_return_200() throws Exception {
         new TrustStoreHandler(trustStorePath, trustStorePassword, STORE_TYPE).createStoreWith("badssl/selfSigned.crt", "badssl/R3.crt", "badssl/ISRGRootX1.crt");
         new KeyStoreHandler(keyStorePath, keyStorePassword, STORE_TYPE).addCertAndUnEncryptedPemKey("badssl/cert.pem", "badssl/pkcs8_pem.key");
@@ -63,6 +68,7 @@ public class AppTest {
     }
 
     @Test
+    @Ignore
     public void should_connect_to_ssl_client_cert_secured_url_with_3DES_EncryptedKey_and_return_200() throws Exception {
         new TrustStoreHandler(trustStorePath, trustStorePassword, STORE_TYPE).createStoreWith("badssl/selfSigned.crt", "badssl/R3.crt", "badssl/ISRGRootX1.crt");
         new KeyStoreHandler(keyStorePath, keyStorePassword, STORE_TYPE).addCertAnd3DESEncryptedPemKey("badssl/cert.pem", "badssl/pkcs8_des.key", "badssl.com".toCharArray());
@@ -72,6 +78,7 @@ public class AppTest {
     }
 
     @Test
+    @Ignore
     public void should_connect_to_ssl_client_cert_secured_url_with_AES_EncryptedKey_and_return_200() throws Exception {
         new TrustStoreHandler(trustStorePath, trustStorePassword, STORE_TYPE).createStoreWith("badssl/selfSigned.crt", "badssl/R3.crt", "badssl/ISRGRootX1.crt");
         new KeyStoreHandler(keyStorePath, keyStorePassword, STORE_TYPE).addCertAndAESEncryptedPemKey("badssl/cert.pem", "badssl/pkcs8_aes.key", "badssl.com".toCharArray());
@@ -81,6 +88,7 @@ public class AppTest {
     }
 
     @Test
+    @Ignore
     public void should_connect_to_ssl_client_cert_secured_url_using_pemFile_and_return_200() throws Exception {
         new TrustStoreHandler(trustStorePath, trustStorePassword, STORE_TYPE).createStoreWith("badssl/selfSigned.crt", "badssl/R3.crt", "badssl/ISRGRootX1.crt");
         new KeyStoreHandler(keyStorePath, keyStorePassword, STORE_TYPE).addCertAndKeyFromPemFile("badssl/badssl.com-client.pem", "badssl.com".toCharArray());
@@ -88,7 +96,6 @@ public class AppTest {
 
         assertEquals(HttpURLConnection.HTTP_OK, new App().makeHttpCallTo("https://client.badssl.com/"));
     }
-
 
     @After
     public void cleanUp() {
