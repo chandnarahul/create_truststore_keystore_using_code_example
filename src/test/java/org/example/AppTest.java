@@ -27,9 +27,16 @@ public class AppTest {
     }
 
     @After
-    public void cleanUp() {
+    public void cleanUp() throws InterruptedException {
         new File(trustStorePath).delete();
         new File(keyStorePath).delete();
+        /*
+         * sometimes windows takes long to delete a file
+         * so adding a delay before next test case begins,
+         * else a better approach will be to append date-timestamp to file name
+         * which will then create unique truststore and keystore files per test case
+         * */
+        Thread.sleep(2000);
     }
 
     @Test
@@ -39,15 +46,15 @@ public class AppTest {
         System.setProperty("javax.net.ssl.trustStore", trustStorePath);
         System.setProperty("javax.net.ssl.trustStorePassword", String.valueOf(trustStorePassword));
         System.setProperty("javax.net.ssl.trustStoreType", STORE_TYPE);
-
         assertEquals(HttpURLConnection.HTTP_OK, new App().makeHttpCallTo("https://self-signed.badssl.com/"));
     }
 
     @Test
     @Ignore
     public void should_connect_to_ssl_client_cert_secured_url_usingP12_and_return_200() throws Exception {
-        new TrustStoreHandler(trustStorePath, trustStorePassword, STORE_TYPE).createStoreWith("badssl/selfSigned.crt", "badssl/R3.crt", "badssl/ISRGRootX1.crt");
+        new TrustStoreHandler(trustStorePath, trustStorePassword, STORE_TYPE).createStoreWith("badssl/selfSigned.crt", "badssl/ISRGRootX1.crt", "badssl/R3.crt");
         new KeyStoreHandler(keyStorePath, keyStorePassword, STORE_TYPE).addP12StoreToKeystore("badssl/badssl.com-client.p12", "badssl.com".toCharArray());
+        Thread.sleep(10000);
         setStoreDetails(STORE_TYPE);
 
         assertEquals(HttpURLConnection.HTTP_OK, new App().makeHttpCallTo("https://client.badssl.com/"));
